@@ -18,7 +18,8 @@ html,body{min-height:100dvh;background:#ffffff;display:flex;align-items:center;j
 .brand-pill{animation:pillSlide 0.7s cubic-bezier(.34,1.56,.64,1) both;}
 @keyframes pillSlide{from{opacity:0;transform:translateY(-20px) scale(0.8);}to{opacity:1;transform:translateY(0) scale(1);}}
 .titulo-img{max-width:220px;width:70%;animation:pillSlide 0.7s cubic-bezier(.34,1.56,.64,1) both;}
-.trivia-logo-img{max-width:260px;width:80%;animation:logoWiggle 3s ease-in-out infinite;margin:2px 0;}
+.trivia-logo-img{max-width:260px;width:80%;margin:-26px 0 4px 0;animation:logoPop 0.8s cubic-bezier(.34,1.56,.64,1) both, logoWiggle 3s ease-in-out 0.8s infinite;}
+@keyframes logoPop{from{opacity:0;transform:scale(0.5) rotate(-6deg);}to{opacity:1;transform:scale(1) rotate(0);}}
 @keyframes logoWiggle{0%,100%{transform:rotate(-2deg) scale(1);}25%{transform:rotate(2deg) scale(1.04);}50%{transform:rotate(-1deg) scale(1.06);}75%{transform:rotate(1.5deg) scale(1.03);}}
 .progress-row{width:100%;display:flex;align-items:center;gap:8px;}
 .progress-label{background:#22c55e;color:white;font-size:13px;font-weight:700;border-radius:20px;padding:5px 14px;white-space:nowrap;flex-shrink:0;animation:labelPop 0.5s cubic-bezier(.34,1.56,.64,1);}
