@@ -11,12 +11,11 @@
 
     body {
       min-height: 100dvh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #ffffff;
+      background: #1a2e10;
       font-family: 'Nunito', sans-serif;
       overflow: hidden;
+      margin: 0;
+      padding: 0;
     }
 
     /* ── App shell ─────────────────────────────── */
@@ -36,7 +35,12 @@
 
     /* Card look on desktop */
     @media (min-width: 500px) {
-      body { padding: 20px; }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
       #app { width: 420px; min-height: 700px; border-radius: 32px; }
     }
 
