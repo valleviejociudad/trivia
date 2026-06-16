@@ -10,7 +10,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -21,10 +21,10 @@
 
     /* ── App shell ─────────────────────────────── */
     #app {
-      width: 380px;
-      min-height: 700px;
+      width: 100%;
+      min-height: 100dvh;
       position: relative;
-      border-radius: 32px;
+      border-radius: 0;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -32,6 +32,12 @@
       justify-content: space-between;
       padding: 48px 28px 48px;
       gap: 0;
+    }
+
+    /* Card look on desktop */
+    @media (min-width: 500px) {
+      body { padding: 20px; }
+      #app { width: 420px; min-height: 700px; border-radius: 32px; }
     }
 
     /* ── Background image ───────────────────────── */
@@ -79,10 +85,27 @@
       position: relative;
       z-index: 2;
       width: 100%;
+      flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0;
+      justify-content: space-between;
+    }
+
+    .header-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .center-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      flex: 1;
     }
 
     /* ── Title image (Valle Viejo) ──────────────── */
@@ -124,7 +147,7 @@
     .stars {
       display: flex;
       gap: 10px;
-      margin-top: 28px;
+      margin-top: 0;
       animation: fadeUp 0.6s ease 1.1s both;
     }
     .star {
@@ -146,7 +169,7 @@
     .btn-iniciar {
       width: 100%;
       max-width: 300px;
-      margin-top: 32px;
+      margin-top: 0;
       padding: 20px 0;
       border: none;
       border-radius: 60px;
@@ -214,18 +237,16 @@
   <div class="particles" id="particles"></div>
 
   <div class="content">
-    <img class="titulo-img" src="titulovertical2.png" alt="Valle Viejo"/>
-    <img class="trivia-img"  src="trivia.png"          alt="¡TRIVIA!"/>
-
-    <div class="stars">
-      <span class="star">⭐</span>
-      <span class="star">🌟</span>
-      <span class="star">⭐</span>
+    <div class="header-content">
+      <img class="titulo-img" src="titulovertical2.png" alt="Valle Viejo"/>
+      <img class="trivia-img"  src="trivia.png"          alt="¡TRIVIA!"/>
     </div>
 
-    <button class="btn-iniciar" id="btnIniciar" onclick="iniciar(this, event)">
-      ▶ &nbsp;INICIAR
-    </button>
+    <div class="center-content">
+      <button class="btn-iniciar" id="btnIniciar" onclick="iniciar(this, event)">
+        ▶ &nbsp;INICIAR
+      </button>
+    </div>
 
     <p class="tagline">¿Cuánto sabés sobre Valle Viejo?</p>
   </div>
