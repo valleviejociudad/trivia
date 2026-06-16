@@ -50,11 +50,14 @@ html,body{min-height:100dvh;background:#ffffff;display:flex;align-items:center;j
 .option-btn.correct .option-letter{background:#16a34a;transform:rotate(360deg) scale(1.2);}
 .option-btn.wrong .option-letter{background:#dc2626;}
 .option-text{font-size:17px;font-weight:700;color:#1a2e10;}
-.result-msg{background:white;border-radius:14px;padding:10px 18px;text-align:center;font-size:14px;font-weight:700;width:100%;display:none;}
-.result-msg.show{display:block;animation:msgBounce 0.5s cubic-bezier(.34,1.56,.64,1);}
-@keyframes msgBounce{from{opacity:0;transform:scale(0.8) translateY(10px);}to{opacity:1;transform:scale(1) translateY(0);}}
-.result-msg.correct{color:#166534;}
-.result-msg.wrong{color:#991b1b;}
+.condor-container{display:none;position:absolute;bottom:90px;left:16px;right:16px;z-index:999;align-items:flex-end;gap:12px;}
+.condor-container.show{display:flex;animation:condorEntrance 0.5s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes condorEntrance{from{opacity:0;transform:translateY(40px) scale(0.85);}to{opacity:1;transform:translateY(0) scale(1);}}
+.condor-avatar{width:120px;height:120px;object-fit:contain;flex-shrink:0;animation:condorFloat 3s ease-in-out infinite alternate;margin-bottom:-10px;filter:drop-shadow(0 15px 25px rgba(0,0,0,0.65));}
+@keyframes condorFloat{from{transform:translateY(0);}to{transform:translateY(-8px);}}
+.speech-bubble{flex:1;background:white;border-radius:22px;padding:16px 18px;position:relative;box-shadow:0 16px 64px rgba(0,0,0,0.65);color:#1a2e10;font-size:15px;font-weight:700;line-height:1.4;border:3px solid var(--bubble-color, #22c55e);transition:border-color 0.2s;}
+.speech-bubble::after{content:'';position:absolute;bottom:24px;left:-10px;border-width:10px 10px 10px 0;border-style:solid;border-color:transparent white transparent transparent;display:block;width:0;z-index:2;}
+.speech-bubble::before{content:'';position:absolute;bottom:22px;left:-14px;border-width:12px 12px 12px 0;border-style:solid;border-color:transparent var(--bubble-color, #22c55e) transparent transparent;display:block;width:0;z-index:1;transition:border-color 0.2s;}
 .nav-row{width:100%;display:flex;align-items:center;gap:10px;margin-top:4px;}
 .nav-btn{border:none;border-radius:50px;padding:13px 16px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;flex:1;font-family:'Nunito',sans-serif;transition:transform 0.15s,filter 0.15s;}
 .nav-btn:hover{transform:scale(1.04);}
@@ -79,16 +82,12 @@ html,body{min-height:100dvh;background:#ffffff;display:flex;align-items:center;j
 .confetti-container{position:absolute;inset:0;pointer-events:none;z-index:10;overflow:hidden;}
 .confetti-piece{position:absolute;width:10px;height:10px;top:-20px;animation:confettiFall linear forwards;}
 @keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(750px) rotate(720deg);opacity:0;}}
-.particles{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden;}
-.particle{position:absolute;width:6px;height:6px;border-radius:50%;animation:floatUp linear infinite;opacity:0.5;}
-@keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:0.5;}100%{transform:translateY(-700px) scale(0);opacity:0;}}
 </style>
 </head>
 <body>
 
 <div id="app">
   <div class="bg"></div>
-  <div class="particles" id="particles"></div>
   <div class="confetti-container" id="confetti"></div>
   <div class="content">
     <img class="titulo-img brand-pill" src="titulovertical2.png" alt="Valle Viejo" />
@@ -101,18 +100,21 @@ html,body{min-height:100dvh;background:#ffffff;display:flex;align-items:center;j
       <p class="question-text" id="questionText"></p>
     </div>
     <div class="options" id="optionsContainer"></div>
-    <div class="result-msg" id="resultMsg"></div>
+    <div class="condor-container" id="condorContainer">
+      <img src="condor.webp" class="condor-avatar" alt="Cóndor" />
+      <div class="speech-bubble" id="speechBubble"></div>
+    </div>
     <div class="score-screen" id="scoreScreen">
       <div class="score-emoji" id="scoreEmoji"></div>
       <div class="score-title">¡Trivia terminada!</div>
       <div class="score-sub">Tu puntaje</div>
       <div class="score-num" id="scoreNum"></div>
       <div class="score-comment" id="scoreComment"></div>
-      <button class="restart-btn" onclick="window.location.href='index.html'">↺ Jugar de nuevo</button>
+      <button class="restart-btn" onclick="window.location.href='index.html'">Jugar de nuevo</button>
     </div>
     <div class="nav-row" id="navRow">
-      <button class="nav-btn nav-restart" onclick="restart()">↺ Reiniciar</button>
-      <button class="nav-btn nav-next" id="btnNext" onclick="goNext()">Siguiente →</button>
+      <button class="nav-btn nav-restart" onclick="restart()">Reiniciar</button>
+      <button class="nav-btn nav-next" id="btnNext" onclick="goNext()">Siguiente</button>
     </div>
   </div>
 </div>
@@ -192,26 +194,40 @@ function sndQuestion(){
 // ─────────────────────────────────────────────────────────────────
 
 const questions=[
-  {q:"¿En qué año fue fundada la ciudad de San Isidro de Valle Viejo?",opts:["1558","1694","1812","1930"],correct:1,exp:"San Isidro de Valle Viejo fue fundada en 1694."},
-  {q:"¿Cuál es el río principal que atraviesa el departamento Valle Viejo?",opts:["Río Colorado","Río del Valle","Río Pilcomayo","Río Salado"],correct:1,exp:"El Río del Valle es el curso de agua más importante de la región."},
-  {q:"¿Cuál es la actividad económica más destacada de Valle Viejo?",opts:["Minería","Pesca","Agricultura y fruticultura","Industria textil"],correct:2,exp:"Valle Viejo es conocido por su producción agrícola, especialmente frutas y hortalizas."},
-  {q:"¿En qué provincia argentina se encuentra el departamento Valle Viejo?",opts:["La Rioja","Tucumán","Catamarca","Salta"],correct:2,exp:"Valle Viejo es un departamento de la provincia de Catamarca."},
-  {q:"¿Cuál es el santo patrono que da nombre a la ciudad cabecera de Valle Viejo?",opts:["San Francisco","San Isidro","San José","San Pedro"],correct:1,exp:"La ciudad se llama San Isidro de Valle Viejo, en honor a San Isidro Labrador."}
+  {
+    q: "¿Cuál es la ciudad cabecera del departamento Valle Viejo?",
+    opts: ["El Portezuelo", "Santa Cruz", "San Isidro", "Huaycama"],
+    correct: 2,
+    exp: "La ciudad cabecera del departamento Valle Viejo es San Isidro."
+  },
+  {
+    q: "La Ermita de Valle Viejo es considerada el primer lugar donde se veneró a la Virgen del Valle. ¿En qué año fue construida originalmente?",
+    opts: ["1695", "1782", "1626", "1900"],
+    correct: 2,
+    exp: "La Ermita de Valle Viejo fue construida originalmente en el año 1626."
+  },
+  {
+    q: "La Cuesta del Portezuelo es una famosa ruta sinuosa que trepa la Sierra de Ancasti. ¿Cuántas curvas aproximadamente tiene su trazado?",
+    opts: ["Más de 300 curvas", "50 curvas", "120 curvas", "200 curvas"],
+    correct: 0,
+    exp: "El trazado sinuoso de la Cuesta del Portezuelo tiene aproximadamente más de 300 curvas."
+  },
+  {
+    q: "¿Qué famosa zamba inmortaliza los paisajes de la Cuesta del Portezuelo en Valle Viejo?",
+    opts: ["La Telesita", "Zamba de mi esperanza", "Paisaje de Catamarca", "La López Pereyra"],
+    correct: 2,
+    exp: "La famosa zamba 'Paisaje de Catamarca', de Polo Giménez, inmortaliza los paisajes de la Cuesta del Portezuelo."
+  },
+  {
+    q: "¿Qué deportes de aventura aérea se pueden practicar desde la cima de la Cuesta del Portezuelo?",
+    opts: ["Escalada y rafting", "Aladelta y parapente", "Kayak y ciclismo", "Senderismo y pesca"],
+    correct: 1,
+    exp: "Desde la cima de la Cuesta del Portezuelo se pueden practicar deportes como aladelta y parapente."
+  }
 ];
 
 let current=0,score=0,answered=false;
 const colors=['#22c55e','#f59e0b','#3b82f6','#ec4899','#a855f7','#f97316','#06b6d4'];
-
-function makeParticles(){
-  const c=document.getElementById('particles');
-  c.innerHTML='';
-  for(let i=0;i<18;i++){
-    const p=document.createElement('div');
-    p.className='particle';
-    p.style.cssText=`left:${Math.random()*100}%;top:${60+Math.random()*40}%;background:${colors[i%colors.length]};width:${4+Math.random()*6}px;height:${4+Math.random()*6}px;animation-duration:${4+Math.random()*6}s;animation-delay:${Math.random()*4}s;`;
-    c.appendChild(p);
-  }
-}
 
 function launchConfetti(){
   const c=document.getElementById('confetti');
@@ -269,9 +285,9 @@ function render(){
     container.appendChild(btn);
   });
 
-  const msg=document.getElementById('resultMsg');
-  msg.className='result-msg';
-  msg.textContent='';
+  const condorContainer=document.getElementById('condorContainer');
+  condorContainer.className='condor-container';
+  document.getElementById('speechBubble').innerHTML='';
   document.getElementById('scoreScreen').className='score-screen';
   document.getElementById('questionCard').style.display='';
   document.getElementById('optionsContainer').style.display='';
@@ -284,21 +300,26 @@ function selectOption(idx,btn){
   const q=questions[current];
   const allBtns=document.querySelectorAll('.option-btn');
   allBtns.forEach(b=>b.disabled=true);
-  const msg=document.getElementById('resultMsg');
+  const condorContainer=document.getElementById('condorContainer');
+  const speechBubble=document.getElementById('speechBubble');
+  
+  let prefix='';
   if(idx===q.correct){
     btn.classList.add('correct');
     score++;
-    msg.textContent='✓ ¡Correcto! '+q.exp;
-    msg.className='result-msg correct show';
+    prefix='<strong style="color:#16a34a;display:block;margin-bottom:4px;font-size:16px;">¡Correcto! 🎉</strong>';
     sndCorrect();
     launchMiniConfetti();
+    speechBubble.style.setProperty('--bubble-color', '#22c55e');
   } else {
     btn.classList.add('wrong');
     allBtns[q.correct].classList.add('correct');
-    msg.textContent='✗ Incorrecto. '+q.exp;
-    msg.className='result-msg wrong show';
+    prefix='<strong style="color:#dc2626;display:block;margin-bottom:4px;font-size:16px;">¡Incorrecto! ❌</strong>';
     sndWrong();
+    speechBubble.style.setProperty('--bubble-color', '#ef4444');
   }
+  speechBubble.innerHTML=prefix+q.exp;
+  condorContainer.className='condor-container show';
 }
 
 function goNext(){
@@ -317,7 +338,7 @@ function goBack(){
 function showScore(){
   document.getElementById('questionCard').style.display='none';
   document.getElementById('optionsContainer').style.display='none';
-  document.getElementById('resultMsg').className='result-msg';
+  document.getElementById('condorContainer').className='condor-container';
   document.getElementById('navRow').style.display='none';
   const ss=document.getElementById('scoreScreen');
   ss.className='score-screen show';
@@ -341,7 +362,6 @@ function restart(){
   render();
 }
 
-makeParticles();
 render();
 </script>
 </body>
