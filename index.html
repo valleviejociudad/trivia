@@ -13,7 +13,7 @@
       min-height: 100dvh;
       background: #1a2e10;
       font-family: 'Nunito', sans-serif;
-      overflow: hidden;
+      overflow-x: hidden;
       margin: 0;
       padding: 0;
     }
@@ -24,7 +24,8 @@
       min-height: 100dvh;
       position: relative;
       border-radius: 0;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -33,15 +34,75 @@
       gap: 0;
     }
 
-    /* Card look on desktop */
-    @media (min-width: 500px) {
+    /* Desktop horizontal landscape layout */
+    @media (min-width: 1025px) {
       body {
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 20px;
+        padding: 0;
+        overflow-x: hidden;
       }
-      #app { width: 420px; min-height: 700px; border-radius: 32px; }
+      #app {
+        width: 100%;
+        min-height: 100dvh;
+        border-radius: 0;
+      }
+      .content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto 1fr auto;
+        grid-template-areas: 
+          "header center"
+          "tagline center"
+          "footer center";
+        align-items: center;
+        justify-items: center;
+        padding: 60px 40px;
+        height: 100%;
+        gap: 20px;
+      }
+      .header-content {
+        grid-area: header;
+        justify-self: center;
+      }
+      .center-content {
+        grid-area: center;
+        height: 100%;
+        justify-content: center;
+      }
+      .tagline {
+        grid-area: tagline;
+        font-size: 24px;
+        margin-top: 0;
+      }
+      .footer-logos {
+        grid-area: footer;
+        margin-top: 0;
+        gap: 32px;
+      }
+      .titulo-img {
+        max-width: 340px;
+      }
+      .trivia-img {
+        max-width: 480px;
+      }
+      .btn-iniciar {
+        max-width: 450px;
+        padding: 24px 0;
+        font-size: 32px;
+      }
+      .condor-inicio {
+        width: 220px;
+        margin-left: -200px;
+        margin-bottom: -30px;
+      }
+      .footer-logos img {
+        height: 60px;
+        max-width: 160px;
+      }
     }
 
     /* ── Background image ───────────────────────── */
@@ -89,6 +150,8 @@
       position: relative;
       z-index: 2;
       width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -280,6 +343,44 @@
     @keyframes condorFlyAway {
       0%   { opacity: 1; transform: translateY(0) scale(1); }
       100% { opacity: 0; transform: translateY(-100px) scale(0.5); }
+    }
+
+    /* ── Tablet overrides ───────────────────────── */
+    @media (min-width: 600px) {
+      .content {
+        max-width: 780px;
+        padding-top: 80px;
+        padding-bottom: 80px;
+      }
+      .titulo-img {
+        max-width: 420px;
+      }
+      .trivia-img {
+        max-width: 580px;
+        margin-top: -16px;
+      }
+      .btn-iniciar {
+        max-width: 500px;
+        padding: 28px 0;
+        font-size: 36px;
+      }
+      .condor-inicio {
+        width: 240px;
+        margin-left: -220px;
+        margin-bottom: -35px;
+      }
+      .tagline {
+        font-size: 24px;
+        margin-top: 32px;
+      }
+      .footer-logos {
+        gap: 32px;
+        margin-top: 36px;
+      }
+      .footer-logos img {
+        height: 68px;
+        max-width: 180px;
+      }
     }
 
   </style>
