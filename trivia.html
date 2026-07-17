@@ -227,113 +227,38 @@ html,body{min-height:100dvh;background:#1a2e10;margin:0;padding:0;overflow-x:hid
 .confetti-piece{position:absolute;width:10px;height:10px;top:-20px;animation:confettiFall linear forwards;}
 @keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(750px) rotate(720deg);opacity:0;}}
 
+/* ── Tablet pequeña 600-767px ── */
 @media (min-width: 600px) and (max-width: 767px) {
   .content {
     max-width: 580px;
     padding: 20px 20px 20px;
     gap: 12px;
   }
-  .titulo-img {
-    max-width: 200px;
-  }
-  .trivia-logo-img {
-    max-width: 300px;
-    margin: -24px 0 6px 0;
-  }
-  .progress-row {
-    gap: 10px;
-  }
-  .progress-label {
-    font-size: 15px;
-    padding: 7px 16px;
-  }
-  .progress-track {
-    height: 12px;
-  }
-  .question-card {
-    padding: 26px 22px 20px;
-    border-radius: 26px;
-  }
-  .question-text {
-    font-size: 22px;
-  }
-  .options {
-    gap: 10px;
-  }
-  .option-btn {
-    padding: 15px 20px;
-    border-radius: 20px;
-  }
-  .option-letter {
-    width: 44px;
-    height: 44px;
-    font-size: 20px;
-  }
-  .option-text {
-    font-size: 20px;
-  }
-  .nav-row {
-    gap: 10px;
-    margin-top: 8px;
-  }
-  .nav-btn {
-    padding: 16px 22px;
-    font-size: 18px;
-  }
-  .nav-next {
-    font-size: 19px;
-  }
-  .condor-container {
-    bottom: 90px;
-    left: 16px;
-    right: 16px;
-    gap: 14px;
-  }
-  .condor-avatar {
-    width: 140px;
-    height: 140px;
-    margin-bottom: -10px;
-  }
-  .speech-bubble {
-    font-size: 17px;
-    padding: 18px 22px;
-    border-radius: 26px;
-    border-width: 4px;
-  }
-  .speech-bubble::before {
-    border-width: 14px 14px 14px 0;
-    left: -16px;
-    bottom: 26px;
-  }
-  .speech-bubble::after {
-    border-width: 11px 11px 11px 0;
-    left: -11px;
-    bottom: 30px;
-  }
-  .score-screen {
-    padding: 36px 28px;
-    border-radius: 28px;
-    gap: 14px;
-  }
-  .score-emoji {
-    font-size: 68px;
-  }
-  .score-title {
-    font-size: 30px;
-  }
-  .score-sub {
-    font-size: 20px;
-  }
-  .score-num {
-    font-size: 60px;
-  }
-  .score-comment {
-    font-size: 18px;
-  }
-  .restart-btn {
-    padding: 16px 48px;
-    font-size: 20px;
-  }
+  .titulo-img { max-width: 200px; }
+  .trivia-logo-img { max-width: 300px; margin: -24px 0 6px 0; }
+  .progress-label { font-size: 15px; padding: 7px 16px; }
+  .progress-track { height: 12px; }
+  .question-card { padding: 26px 22px 20px; border-radius: 26px; }
+  .question-text { font-size: 22px; }
+  .options { gap: 10px; }
+  .option-btn { padding: 15px 20px; border-radius: 20px; }
+  .option-letter { width: 44px; height: 44px; font-size: 20px; }
+  .option-text { font-size: 20px; }
+  .nav-row { gap: 10px; margin-top: 8px; }
+  .nav-btn { padding: 16px 22px; font-size: 18px; }
+  .nav-next { font-size: 19px; }
+  .condor-container { bottom: 90px; left: 16px; right: 16px; gap: 14px; }
+  .condor-avatar { width: 140px; height: 140px; margin-bottom: -10px; }
+  .speech-bubble { font-size: 17px; padding: 18px 22px; border-radius: 26px; border-width: 4px; }
+  .speech-bubble::before { border-width: 14px 14px 14px 0; left: -16px; bottom: 26px; }
+  .speech-bubble::after { border-width: 11px 11px 11px 0; left: -11px; bottom: 30px; }
+  .score-screen { padding: 36px 28px; border-radius: 28px; gap: 14px; }
+  .score-emoji { font-size: 68px; }
+  .score-title { font-size: 30px; }
+  .score-sub { font-size: 20px; }
+  .score-num { font-size: 60px; }
+  .score-comment { font-size: 18px; }
+  .restart-btn { padding: 16px 48px; font-size: 20px; }
 }
 
 /* ── Tablet portrait 768px-1024px (ej. 1200x2000) ── */
@@ -343,107 +268,31 @@ html,body{min-height:100dvh;background:#1a2e10;margin:0;padding:0;overflow-x:hid
     padding: 24px 28px 24px;
     gap: 14px;
   }
-  .titulo-img {
-    max-width: 200px;
-  }
-  .trivia-logo-img {
-    max-width: 310px;
-    margin: -28px 0 8px 0;
-  }
-  .progress-row {
-    gap: 10px;
-  }
-  .progress-label {
-    font-size: 16px;
-    padding: 8px 18px;
-  }
-  .progress-track {
-    height: 13px;
-  }
-  .question-card {
-    padding: 28px 28px 22px;
-    border-radius: 28px;
-  }
-  .question-text {
-    font-size: 24px;
-  }
-  .options {
-    gap: 12px;
-  }
-  .option-btn {
-    padding: 16px 24px;
-    border-radius: 22px;
-  }
-  .option-letter {
-    width: 46px;
-    height: 46px;
-    font-size: 21px;
-  }
-  .option-text {
-    font-size: 21px;
-  }
-  .nav-row {
-    gap: 12px;
-    margin-top: 10px;
-  }
-  .nav-btn {
-    padding: 17px 24px;
-    font-size: 19px;
-  }
-  .nav-next {
-    font-size: 20px;
-  }
-  .condor-container {
-    bottom: 96px;
-    left: 20px;
-    right: 20px;
-    gap: 16px;
-  }
-  .condor-avatar {
-    width: 150px;
-    height: 150px;
-    margin-bottom: -10px;
-  }
-  .speech-bubble {
-    font-size: 18px;
-    padding: 20px 24px;
-    border-radius: 28px;
-    border-width: 4px;
-  }
-  .speech-bubble::before {
-    border-width: 16px 16px 16px 0;
-    left: -18px;
-    bottom: 28px;
-  }
-  .speech-bubble::after {
-    border-width: 12px 12px 12px 0;
-    left: -12px;
-    bottom: 32px;
-  }
-  .score-screen {
-    padding: 40px 32px;
-    border-radius: 30px;
-    gap: 16px;
-  }
-  .score-emoji {
-    font-size: 72px;
-  }
-  .score-title {
-    font-size: 32px;
-  }
-  .score-sub {
-    font-size: 20px;
-  }
-  .score-num {
-    font-size: 64px;
-  }
-  .score-comment {
-    font-size: 19px;
-  }
-  .restart-btn {
-    padding: 17px 52px;
-    font-size: 21px;
-  }
+  .titulo-img { max-width: 200px; }
+  .trivia-logo-img { max-width: 310px; margin: -28px 0 8px 0; }
+  .progress-label { font-size: 16px; padding: 8px 18px; }
+  .progress-track { height: 13px; }
+  .question-card { padding: 28px 28px 22px; border-radius: 28px; }
+  .question-text { font-size: 24px; }
+  .options { gap: 12px; }
+  .option-btn { padding: 16px 24px; border-radius: 22px; }
+  .option-letter { width: 46px; height: 46px; font-size: 21px; }
+  .option-text { font-size: 21px; }
+  .nav-row { gap: 12px; margin-top: 10px; }
+  .nav-btn { padding: 17px 24px; font-size: 19px; }
+  .nav-next { font-size: 20px; }
+  .condor-container { bottom: 96px; left: 20px; right: 20px; gap: 16px; }
+  .condor-avatar { width: 150px; height: 150px; margin-bottom: -10px; }
+  .speech-bubble { font-size: 18px; padding: 20px 24px; border-radius: 28px; border-width: 4px; }
+  .speech-bubble::before { border-width: 16px 16px 16px 0; left: -18px; bottom: 28px; }
+  .speech-bubble::after { border-width: 12px 12px 12px 0; left: -12px; bottom: 32px; }
+  .score-screen { padding: 40px 32px; border-radius: 30px; gap: 16px; }
+  .score-emoji { font-size: 72px; }
+  .score-title { font-size: 32px; }
+  .score-sub { font-size: 20px; }
+  .score-num { font-size: 64px; }
+  .score-comment { font-size: 19px; }
+  .restart-btn { padding: 17px 52px; font-size: 21px; }
 }
 </style>
 </head>
@@ -509,7 +358,6 @@ function sndCorrect(){
     g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+t+0.28);
     o.start(c.currentTime+t);o.stop(c.currentTime+t+0.32);
   });
-  // brightness shimmer
   const o2=c.createOscillator(),g2=c.createGain();
   o2.connect(g2);g2.connect(c.destination);
   o2.type='triangle';o2.frequency.value=2093;
@@ -520,7 +368,6 @@ function sndCorrect(){
 
 function sndWrong(){
   const c=actx();
-  // double descending buzz (wah-wah)
   [[0,280,90],[0.18,240,75]].forEach(([t,f0,f1])=>{
     const o=c.createOscillator(),g=c.createGain();
     o.connect(g);g.connect(c.destination);
@@ -535,7 +382,6 @@ function sndWrong(){
 
 function sndQuestion(){
   const c=actx();
-  // quick rising whoosh
   const o=c.createOscillator(),g=c.createGain();
   o.connect(g);g.connect(c.destination);
   o.type='sine';
@@ -544,7 +390,6 @@ function sndQuestion(){
   g.gain.setValueAtTime(0.18,c.currentTime);
   g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.28);
   o.start();o.stop(c.currentTime+0.3);
-  // short fanfare hit
   [[0.28,440],[0.36,554.37],[0.44,659.25]].forEach(([t,f])=>{
     const o2=c.createOscillator(),g2=c.createGain();
     o2.connect(g2);g2.connect(c.destination);
@@ -556,39 +401,146 @@ function sndQuestion(){
 }
 // ─────────────────────────────────────────────────────────────────
 
-const questions=[
+// ── Pool completo de 18 preguntas reales ──────────────────────────
+const allQuestions=[
   {
-    q: "¿Cuál es la ciudad cabecera del departamento Valle Viejo?",
-    opts: ["El Portezuelo", "Santa Cruz", "San Isidro", "Huaycama"],
-    correct: 2,
-    exp: "La ciudad cabecera del departamento Valle Viejo es San Isidro."
+    q:"¿Cuál es la Plaza Principal de Valle Viejo?",
+    opts:["Plaza El Aborigen","Plaza General San Martín","Plaza Ramón S. Castillo"],
+    correct:0,
+    exp:"La Plaza Principal de Valle Viejo es la Plaza El Aborigen."
   },
   {
-    q: "La Ermita de Valle Viejo es considerada el primer lugar donde se veneró a la Virgen del Valle. ¿En qué año fue construida originalmente?",
-    opts: ["1695", "1782", "1626", "1900"],
-    correct: 2,
-    exp: "La Ermita de Valle Viejo fue construida originalmente en el año 1626."
+    q:"¿Cuál es la localidad cabecera de Valle Viejo?",
+    opts:["Santa Rosa","Villa Dolores","San Isidro"],
+    correct:2,
+    exp:"La localidad cabecera de Valle Viejo es San Isidro."
   },
   {
-    q: "La Cuesta del Portezuelo es una famosa ruta sinuosa que trepa la Sierra de Ancasti. ¿Cuántas curvas aproximadamente tiene su trazado?",
-    opts: ["Más de 300 curvas", "50 curvas", "120 curvas", "200 curvas"],
-    correct: 0,
-    exp: "El trazado sinuoso de la Cuesta del Portezuelo tiene aproximadamente más de 300 curvas."
+    q:"¿Quién es el santo patrono de Valle Viejo?",
+    opts:["San Juan Bautista","San Isidro Labrador","Fray Mamerto Esquiú"],
+    correct:1,
+    exp:"El santo patrono de Valle Viejo es San Isidro Labrador."
   },
   {
-    q: "¿Qué famosa zamba inmortaliza los paisajes de la Cuesta del Portezuelo en Valle Viejo?",
-    opts: ["La Telesita", "Zamba de mi esperanza", "Paisaje de Catamarca", "La López Pereyra"],
-    correct: 2,
-    exp: "La famosa zamba 'Paisaje de Catamarca', de Polo Giménez, inmortaliza los paisajes de la Cuesta del Portezuelo."
+    q:"¿Cómo se conoce popularmente a los habitantes de Valle Viejo?",
+    opts:["Chacareros","Valleviejences","Valleviejinos"],
+    correct:0,
+    exp:"Los habitantes de Valle Viejo son conocidos popularmente como Chacareros."
   },
   {
-    q: "¿Qué deportes de aventura aérea se pueden practicar desde la cima de la Cuesta del Portezuelo?",
-    opts: ["Escalada y rafting", "Aladelta y parapente", "Kayak y ciclismo", "Senderismo y pesca"],
-    correct: 1,
-    exp: "Desde la cima de la Cuesta del Portezuelo se pueden practicar deportes como aladelta y parapente."
+    q:"¿Qué color predomina en la bandera de Valle Viejo?",
+    opts:["Azul y blanco","Amarillo y rojo","Verde y blanco"],
+    correct:2,
+    exp:"La bandera de Valle Viejo tiene como colores predominantes el verde y el blanco."
+  },
+  {
+    q:"¿Qué famosa cuesta inspiró una conocida zamba catamarqueña?",
+    opts:["Cuesta del Totoral","Cuesta del Portezuelo","Cuesta de Singuil"],
+    correct:1,
+    exp:"La Cuesta del Portezuelo inspiró la famosa zamba catamarqueña 'Paisaje de Catamarca'."
+  },
+  {
+    q:"¿Qué importante sitio religioso se encuentra en Valle Viejo?",
+    opts:["La Catedral Basílica","La Gruta","La Ermita"],
+    correct:2,
+    exp:"En Valle Viejo se encuentra La Ermita, un importante sitio religioso histórico."
+  },
+  {
+    q:"¿Qué imagen religiosa se venera especialmente en la Ermita?",
+    opts:["San Juan Bautista","Fray Mamerto Esquiú","Virgen del Valle"],
+    correct:2,
+    exp:"En la Ermita de Valle Viejo se venera especialmente a la Virgen del Valle."
+  },
+  {
+    q:"¿Qué representa el emblemático monumento a El Aborigen?",
+    opts:["A los primeros pueblos originarios de la región","A los inmigrantes europeos","A los gauchos catamarqueños"],
+    correct:0,
+    exp:"El monumento a El Aborigen representa a los primeros pueblos originarios de la región."
+  },
+  {
+    q:"¿Qué espacio cultural importante funciona en Valle Viejo?",
+    opts:["Autódromo","Cine Teatro","Predio Ferial"],
+    correct:1,
+    exp:"En Valle Viejo funciona el Cine Teatro como importante espacio cultural."
+  },
+  {
+    q:"¿Qué festival tradicional de Valle Viejo fue reivindicado y volvió a realizarse tras mucho tiempo sin hacerse?",
+    opts:["Festival de la Mandarina","Festival del Aguardiente","Festival del Cabrito"],
+    correct:1,
+    exp:"El Festival del Aguardiente fue reivindicado y volvió a realizarse en Valle Viejo."
+  },
+  {
+    q:"¿Dónde nació Felipe Varela?",
+    opts:["Tinogasta","Belén","Huaycama"],
+    correct:2,
+    exp:"Felipe Varela nació en Huaycama, en el departamento Valle Viejo."
+  },
+  {
+    q:"¿Quién fue el artista encargado de diseñar la plaza y monumento a El Aborigen?",
+    opts:["Caravati","Raúl Guzmán","Luis Varela Lezana"],
+    correct:1,
+    exp:"El artista Raúl Guzmán fue el encargado de diseñar la plaza y el monumento a El Aborigen."
+  },
+  {
+    q:"¿Qué representa la bandera Wiphala?",
+    opts:["Una bandera militar de la época colonial","Un símbolo de las provincias argentinas","Un símbolo de unidad, identidad y diversidad de los pueblos originarios andinos"],
+    correct:2,
+    exp:"La bandera Wiphala representa un símbolo de unidad, identidad y diversidad de los pueblos originarios andinos."
+  },
+  {
+    q:"¿Qué día se conmemora la festividad de San Isidro Labrador?",
+    opts:["15 de mayo","4 de abril","23 de junio"],
+    correct:0,
+    exp:"La festividad de San Isidro Labrador se conmemora el 15 de mayo."
+  },
+  {
+    q:"¿Quién diseñó la Parroquia de San Isidro Labrador de Valle Viejo?",
+    opts:["Ernesto Vespignani","Luis Caravati","Juan Bautista Alberdi"],
+    correct:1,
+    exp:"Luis Caravati fue quien diseñó la Parroquia de San Isidro Labrador de Valle Viejo."
+  },
+  {
+    q:"¿Qué fecha se celebra oficialmente como fundación de Valle Viejo?",
+    opts:["7 de abril de 1695","19 de abril de 1668","8 de diciembre de 1855"],
+    correct:1,
+    exp:"La fundación de Valle Viejo se celebra oficialmente el 19 de abril de 1668."
+  },
+  {
+    q:"¿Cuándo se celebra el Día del Indio Americano en Valle Viejo?",
+    opts:["12 de octubre","19 de abril","9 de julio"],
+    correct:1,
+    exp:"El Día del Indio Americano se celebra en Valle Viejo el 19 de abril."
   }
 ];
 
+const QUESTIONS_PER_ROUND = 5;
+
+// Fisher-Yates shuffle
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+// Elige 5 preguntas al azar y mezcla el orden de las opciones de cada una
+function buildRound(){
+  const picked=shuffle(allQuestions).slice(0,QUESTIONS_PER_ROUND);
+  return picked.map(q=>{
+    const correctText=q.opts[q.correct];
+    const shuffledOpts=shuffle(q.opts);
+    return {
+      q: q.q,
+      opts: shuffledOpts,
+      correct: shuffledOpts.indexOf(correctText),
+      exp: q.exp
+    };
+  });
+}
+
+let questions=buildRound();
 let current=0,score=0,answered=false;
 const colors=['#22c55e','#f59e0b','#3b82f6','#ec4899','#a855f7','#f97316','#06b6d4'];
 
@@ -648,8 +600,7 @@ function render(){
     container.appendChild(btn);
   });
 
-  const condorContainer=document.getElementById('condorContainer');
-  condorContainer.className='condor-container';
+  document.getElementById('condorContainer').className='condor-container';
   document.getElementById('speechBubble').innerHTML='';
   document.getElementById('scoreScreen').className='score-screen';
   document.getElementById('questionCard').style.display='';
@@ -663,9 +614,8 @@ function selectOption(idx,btn){
   const q=questions[current];
   const allBtns=document.querySelectorAll('.option-btn');
   allBtns.forEach(b=>b.disabled=true);
-  const condorContainer=document.getElementById('condorContainer');
   const speechBubble=document.getElementById('speechBubble');
-  
+
   let prefix='';
   if(idx===q.correct){
     btn.classList.add('correct');
@@ -673,16 +623,16 @@ function selectOption(idx,btn){
     prefix='<strong style="color:#16a34a;display:block;margin-bottom:4px;font-size:16px;">¡Correcto! 🎉</strong>';
     sndCorrect();
     launchMiniConfetti();
-    speechBubble.style.setProperty('--bubble-color', '#22c55e');
+    speechBubble.style.setProperty('--bubble-color','#22c55e');
   } else {
     btn.classList.add('wrong');
     allBtns[q.correct].classList.add('correct');
     prefix='<strong style="color:#dc2626;display:block;margin-bottom:4px;font-size:16px;">¡Incorrecto! ❌</strong>';
     sndWrong();
-    speechBubble.style.setProperty('--bubble-color', '#ef4444');
+    speechBubble.style.setProperty('--bubble-color','#ef4444');
   }
   speechBubble.innerHTML=prefix+q.exp;
-  condorContainer.className='condor-container show';
+  document.getElementById('condorContainer').className='condor-container show';
 }
 
 function goNext(){
@@ -718,6 +668,8 @@ function showScore(){
 }
 
 function restart(){
+  // Nueva ronda con preguntas y opciones aleatorias cada vez
+  questions=buildRound();
   current=0;score=0;
   document.getElementById('questionCard').style.display='';
   document.getElementById('optionsContainer').style.display='';
