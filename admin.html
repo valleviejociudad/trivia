@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trivia Valle Viejo — Admin Dashboard</title>
+  <meta name="description" content="Panel de administración y estadísticas para Trivia Valle Viejo." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #22c55e;
+      --green-dim: rgba(34,197,94,0.15);
+      --green-border: rgba(34,197,94,0.25);
+      --green-glow: rgba(34,197,94,0.4);
+      --bg: linear-gradient(135deg, #0a1608 0%, #1a2e10 50%, #0a1608 100%);
+      --card-bg: rgba(255,255,255,0.04);
+      --card-border: rgba(34,197,94,0.2);
+      --text-main: #f0fdf4;
+      --text-muted: rgba(255,255,255,0.45);
+      --text-dim: rgba(255,255,255,0.2);
+      --gold: #f59e0b;
+      --silver: #94a3b8;
+      --bronze: #cd7c3e;
+      --red: #ef4444;
+      --yellow: #eab308;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── Animated background particles ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 600px 400px at 20% 10%, rgba(34,197,94,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 600px at 80% 80%, rgba(34,197,94,0.05) 0%, transparent 70%),
+        radial-gradient(ellipse 300px 300px at 50% 50%, rgba(34,197,94,0.03) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ─── Scrollbar ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
+    ::-webkit-scrollbar-thumb { background: rgba(34,197,94,0.35); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(34,197,94,0.55); }
+
+    /* ─── HEADER ─── */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0 24px;
+      margin: 0 -24px;
+      background: rgba(10,22,8,0.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(34,197,94,0.12);
+      box-shadow: 0 4px 32px rgba(0,0,0,0.4);
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 18px 0;
+    }
+
+    .header-icon {
+      font-size: 2.6rem;
+      filter: drop-shadow(0 0 12px rgba(34,197,94,0.6));
+      animation: pulse-icon 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-icon {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(34,197,94,0.5)); }
+      50% { filter: drop-shadow(0 0 22px rgba(34,197,94,0.9)); }
+    }
+
+    .header-titles { flex: 1; }
+    .header-titles h1 {
+      font-size: 1.65rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #86efac 0%, #22c55e 50%, #16a34a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+    .header-titles p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .header-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green-dim);
+      border: 1px solid var(--green-border);
+      border-radius: 30px;
+      padding: 8px 18px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--green);
+      white-space: nowrap;
+      transition: var(--transition);
+    }
+
+    .header-badge .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes blink-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* ─── CARD BASE ─── */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 28px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(34,197,94,0.4), transparent);
+    }
+
+    .card:hover {
+      border-color: rgba(34,197,94,0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(34,197,94,0.1);
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .card-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    /* ─── CONFIG SECTION ─── */
+    .section { margin-top: 28px; }
+
+    .url-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .url-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      letter-spacing: 0.04em;
+    }
+
+    #scriptUrl {
+      flex: 1;
+      min-width: 260px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 12px 16px;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    #scriptUrl::placeholder { color: var(--text-dim); }
+    #scriptUrl:focus {
+      border-color: var(--green);
+      background: rgba(34,197,94,0.05);
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.12);
+    }
+
+    .btn-load {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #052e16;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 800;
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+      box-shadow: 0 4px 16px rgba(34,197,94,0.3);
+    }
+
+    .btn-load:hover {
+      background: linear-gradient(135deg, #4ade80, #22c55e);
+      box-shadow: 0 6px 24px rgba(34,197,94,0.5);
+      transform: translateY(-2px);
+    }
+
+    .btn-load:active { transform: translateY(0); }
+
+    /* Status message */
+    #statusMsg {
+      margin-top: 14px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      display: none;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    #statusMsg.loading {
+      display: flex;
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.25);
+      color: #93c5fd;
+    }
+
+    #statusMsg.success {
+      display: flex;
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.25);
+      color: var(--green);
+    }
+
+    #statusMsg.error {
+      display: flex;
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.25);
+      color: #fca5a5;
+    }
+
+    .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid rgba(147,197,253,0.3);
+      border-top-color: #93c5fd;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── SUMMARY CARDS ─── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    @media (max-width: 900px) {
+      .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 26px 24px;
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      transition: var(--transition);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(34,197,94,0.5), transparent);
+    }
+
+    .stat-card::after {
+      content: attr(data-icon);
+      position: absolute;
+      right: 20px;
+      bottom: 14px;
+      font-size: 3.5rem;
+      opacity: 0.08;
+      line-height: 1;
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      border-color: rgba(34,197,94,0.45);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(34,197,94,0.15);
+    }
+
+    .stat-card:hover::after { opacity: 0.14; }
+
+    .card-value {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--green);
+      line-height: 1;
+      margin-bottom: 8px;
+      letter-spacing: -1px;
+      transition: var(--transition);
+    }
+
+    .card-label {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 4px;
+    }
+
+    .card-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* ─── CHARTS ─── */
+    .charts-row1 {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .charts-row2 { margin-top: 18px; }
+
+    @media (max-width: 900px) {
+      .charts-row1 { grid-template-columns: 1fr; }
+    }
+
+    .chart-container {
+      position: relative;
+      width: 100%;
+    }
+
+    /* ─── RANKING ─── */
+    .ranking-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .rank-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+
+    .rank-item:hover {
+      background: rgba(34,197,94,0.04);
+      border-color: rgba(34,197,94,0.2);
+    }
+
+    .rank-badge {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .rank-1 { background: rgba(245,158,11,0.15); border: 2px solid rgba(245,158,11,0.5); color: #f59e0b; }
+    .rank-2 { background: rgba(148,163,184,0.1); border: 2px solid rgba(148,163,184,0.4); color: #94a3b8; }
+    .rank-3 { background: rgba(205,124,62,0.12); border: 2px solid rgba(205,124,62,0.4); color: #cd7c3e; }
+    .rank-n { background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.12); color: var(--text-muted); }
+
+    .rank-question {
+      flex: 1;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.4;
+    }
+
+    .rank-bar-wrap {
+      width: 120px;
+      height: 6px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 3px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .rank-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      width: 0%;
+      transition: width 1s cubic-bezier(0.4,0,0.2,1) 0.1s;
+    }
+
+    .rank-pct {
+      font-size: 0.85rem;
+      font-weight: 800;
+      width: 46px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .pct-green { color: var(--green); }
+    .pct-yellow { color: var(--yellow); }
+    .pct-red { color: var(--red); }
+
+    .rank-count {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .empty-state .empty-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
+
+    /* ─── TABLE ─── */
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+
+    thead th {
+      background: rgba(34,197,94,0.08);
+      padding: 13px 16px;
+      text-align: left;
+      font-size: 0.73rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: rgba(34,197,94,0.8);
+      border-bottom: 1px solid rgba(34,197,94,0.15);
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: background var(--transition);
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+
+    tbody tr:hover { background: rgba(34,197,94,0.04); }
+
+    tbody td {
+      padding: 12px 16px;
+      color: rgba(255,255,255,0.8);
+      font-weight: 600;
+      vertical-align: middle;
+    }
+
+    .row-num {
+      color: var(--text-dim);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .score-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px; height: 28px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 900;
+    }
+
+    .score-5 { background: rgba(245,158,11,0.2); color: #f59e0b; border: 1px solid rgba(245,158,11,0.4); }
+    .score-4 { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.35); }
+    .score-3 { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.25); }
+    .score-2 { background: rgba(234,179,8,0.1); color: #eab308; border: 1px solid rgba(234,179,8,0.3); }
+    .score-1 { background: rgba(252,165,165,0.08); color: #fca5a5; border: 1px solid rgba(252,165,165,0.2); }
+    .score-0 { background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+
+    code {
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.15);
+      color: rgba(34,197,94,0.85);
+      border-radius: 5px;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      font-family: 'Nunito', monospace;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    /* ─── EXPORT ─── */
+    .export-section {
+      margin-top: 28px;
+      text-align: center;
+    }
+
+    .btn-export {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: var(--green);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      padding: 15px 36px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: var(--transition);
+      letter-spacing: 0.02em;
+    }
+
+    .btn-export:hover:not(:disabled) {
+      background: rgba(34,197,94,0.1);
+      border-color: var(--green);
+      box-shadow: 0 0 32px rgba(34,197,94,0.25), inset 0 0 20px rgba(34,197,94,0.05);
+      transform: translateY(-3px);
+    }
+
+    .btn-export:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* ─── Misc helpers ─── */
+    .section-spacer { margin-top: 28px; }
+
+    .glow-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(34,197,94,0.3) 50%, transparent 100%);
+      margin: 32px 0;
+    }
+
+    .pct-cell-green { color: var(--green); font-weight: 800; }
+    .pct-cell-yellow { color: var(--yellow); font-weight: 800; }
+    .pct-cell-red { color: var(--red); font-weight: 800; }
+
+    /* ─── Fade-in animation for sections ─── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .section, .summary-grid, .charts-row1, .charts-row2, .export-section {
+      animation: fadeInUp 0.5s ease both;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ HEADER ═══════════════════════════════════════ -->
+<header class="header">
+  <div class="header-inner">
+    <span class="header-icon">🏆</span>
+    <div class="header-titles">
+      <h1>Trivia Valle Viejo</h1>
+      <p>Estadísticas</p>
+    </div>
+    <div class="header-badge" id="lastUpdate">
+      <span class="dot"></span>
+      <span>Sin actualizar</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════ PAGE ════════════════════════════════════════ -->
+<div class="page-wrapper">
+
+  <!-- ── CONFIG ── -->
+  <div class="section">
+    <div class="card">
+      <div class="card-title">⚙️ Configuración</div>
+      <div class="url-label">🔗 URL del Apps Script</div>
+      <div class="url-row">
+        <input
+          type="url"
+          id="scriptUrl"
+          placeholder="https://script.google.com/macros/s/AKfycbyKL5ZM6jBrB_gFwflZJaXfDu9G6ogPT-fHRO_F3xXwfxe9ulFLWzOjL-z-GAgXuwUd/exec"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button class="btn-load" onclick="loadData()">
+          <span>⚡</span> Cargar Datos
+        </button>
+      </div>
+      <div id="statusMsg" role="status"></div>
+    </div>
+  </div>
+
+  <!-- ── SUMMARY CARDS ── -->
+  <div class="summary-grid">
+    <div class="stat-card" data-icon="🎮">
+      <div class="card-value" id="statTotal">—</div>
+      <div class="card-label">Total Partidas</div>
+      <div class="card-sub" id="statTotalSub">Esperando datos</div>
+    </div>
+    <div class="stat-card" data-icon="⭐">
+      <div class="card-value" id="statAvg">—</div>
+      <div class="card-label">Promedio de Puntaje</div>
+      <div class="card-sub" id="statAvgSub">sobre 5 puntos</div>
+    </div>
+    <div class="stat-card" data-icon="✅">
+      <div class="card-value" id="statAcierto">—</div>
+      <div class="card-label">Tasa de Acierto</div>
+      <div class="card-sub" id="statAciertoSub">respuestas correctas</div>
+    </div>
+    <div class="stat-card" data-icon="📅">
+      <div class="card-value" id="statLastTime">—</div>
+      <div class="card-label">Última Partida</div>
+      <div class="card-sub" id="statLastDate">Sin registros</div>
+    </div>
+  </div>
+
+  <div class="glow-line"></div>
+
+  <!-- ── CHARTS ROW 1 ── -->
+  <div class="charts-row1">
+    <div class="card">
+      <div class="card-title">📈 Partidas por Día <span style="font-weight:600;font-size:0.8rem;color:var(--text-muted);margin-left:4px">— últimos 30 días</span></div>
+      <div class="chart-container" style="height:260px;">
+        <canvas id="chartDias"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🎯 Distribución de Puntajes</div>
+      <div class="chart-container" style="height:260px;">
+        <canvas id="chartPuntajes"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CHARTS ROW 2 ── -->
+  <div class="charts-row2">
+    <div class="card">
+      <div class="card-title">🕐 Actividad por Hora del Día</div>
+      <div class="chart-container" style="height:220px;">
+        <canvas id="chartHoras"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="glow-line"></div>
+
+  <!-- ── RANKING DE PREGUNTAS ── -->
+  <div class="section-spacer">
+    <div class="card">
+      <div class="card-title">
+        🏅 Ranking de Preguntas
+        <span style="font-size:0.78rem;font-weight:600;color:var(--text-muted);margin-left:4px">— Ordenadas de mayor a menor tasa de acierto</span>
+      </div>
+      <div id="rankingList">
+        <div class="empty-state">
+          <div class="empty-icon">📊</div>
+          Cargá los datos para ver el ranking de preguntas.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── HISTORIAL COMPLETO ── -->
+  <div class="section-spacer">
+    <div class="card">
+      <div class="card-title">📋 Historial Completo</div>
+      <div class="table-wrapper">
+        <table id="histTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Tablet</th>
+              <th>Puntaje</th>
+              <th>% Acierto</th>
+              <th>Duración</th>
+            </tr>
+          </thead>
+          <tbody id="histBody">
+            <tr>
+              <td colspan="7" class="empty-state" style="padding:40px;">
+                <div class="empty-icon" style="text-align:center;">📭</div>
+                <div style="text-align:center;">Sin datos aún. Cargá los datos para ver el historial.</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── EXPORT ── -->
+  <div class="export-section">
+    <button id="btnExport" class="btn-export" disabled onclick="exportExcel()">
+      📥 Exportar a Excel (.xlsx)
+    </button>
+  </div>
+
+</div><!-- /page-wrapper -->
+
+<!-- ═══════════════════════════════════════ JAVASCRIPT ══════════════════════════════════ -->
+<script>
+  // ─── Globals ───
+  let allData = null;
+  let charts = {};
+
+  Chart.defaults.color = 'rgba(255,255,255,0.4)';
+  Chart.defaults.borderColor = 'rgba(255,255,255,0.08)';
+  Chart.defaults.font.family = 'Nunito';
+
+  // ─── Init ───
+  window.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('trivia_admin_url');
+    if (saved) document.getElementById('scriptUrl').value = saved;
+  });
+
+  // ─── Status ───
+  function setStatus(type, msg) {
+    const el = document.getElementById('statusMsg');
+    el.className = type;
+    if (type === 'loading') {
+      el.innerHTML = `<div class="spinner"></div><span>${msg}</span>`;
+    } else {
+      el.innerHTML = `<span>${msg}</span>`;
+    }
+  }
+
+  // ─── Load Data (JSONP) ───
+  function loadData() {
+    const url = document.getElementById('scriptUrl').value.trim();
+    if (!url) { setStatus('error', '❌ Ingresá la URL del Apps Script primero.'); return; }
+    localStorage.setItem('trivia_admin_url', url);
+    setStatus('loading', '⏳ Cargando datos desde Google Sheets...');
+
+    const old = document.getElementById('_jsonpScript');
+    if (old) old.remove();
+
+    window._triviaStatsCallback = function(data) {
+      allData = data;
+      setStatus('success', `✅ ${data.partidas.length} partidas cargadas.`);
+      document.getElementById('lastUpdate').innerHTML = `<span class="dot"></span><span>Actualizado: ${new Date().toLocaleTimeString('es-AR')}</span>`;
+      document.getElementById('btnExport').disabled = data.partidas.length === 0;
+      renderDashboard();
+    };
+
+    const script = document.createElement('script');
+    script.id = '_jsonpScript';
+    script.src = url + '?callback=_triviaStatsCallback';
+    script.onerror = () => setStatus('error', '❌ No se pudo conectar. Verificá la URL o tu conexión.');
+    document.head.appendChild(script);
+
+    setTimeout(() => {
+      if (document.getElementById('statusMsg').classList.contains('loading')) {
+        setStatus('error', '❌ Tiempo agotado. Verificá la URL.');
+      }
+    }, 10000);
+  }
+
+  // ─── Main render ───
+  function renderDashboard() {
+    if (!allData) return;
+    const { partidas, preguntas } = allData;
+
+    renderSummary(partidas);
+    renderChartDias(partidas);
+    renderChartPuntajes(partidas);
+    renderChartHoras(partidas);
+    renderRanking(preguntas);
+    renderHistorial(partidas);
+  }
+
+  // ─── Summary ───
+  function renderSummary(partidas) {
+    const n = partidas.length;
+    document.getElementById('statTotal').textContent = n.toLocaleString('es-AR');
+    document.getElementById('statTotalSub').textContent = n === 0 ? 'Sin registros' : `${n} registros cargados`;
+
+    if (n === 0) {
+      document.getElementById('statAvg').textContent = '—';
+      document.getElementById('statAcierto').textContent = '—';
+      document.getElementById('statLastTime').textContent = '—';
+      document.getElementById('statLastDate').textContent = 'Sin registros';
+      return;
+    }
+
+    const sum = partidas.reduce((a, p) => a + parseFloat(p['Puntaje'] || 0), 0);
+    const avg = sum / n;
+    document.getElementById('statAvg').textContent = avg.toFixed(2);
+    document.getElementById('statAvgSub').textContent = 'sobre 5 puntos';
+
+    const totalCorrect = partidas.reduce((a, p) => a + parseFloat(p['Puntaje'] || 0), 0);
+    const totalPossible = partidas.reduce((a, p) => a + parseFloat(p['Total'] || 5), 0);
+    const tasa = totalPossible > 0 ? ((totalCorrect / totalPossible) * 100).toFixed(1) : '0';
+    document.getElementById('statAcierto').textContent = tasa + '%';
+    document.getElementById('statAciertoSub').textContent = `${Math.round(totalCorrect)} de ${Math.round(totalPossible)} correctas`;
+
+    const last = partidas[partidas.length - 1];
+    document.getElementById('statLastTime').textContent = last['Hora'] || '—';
+    document.getElementById('statLastDate').textContent = last['Fecha'] || '—';
+  }
+
+  // ─── Chart: Partidas por Día ───
+  function renderChartDias(partidas) {
+    const last30 = {};
+    const today = new Date();
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const key = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
+      last30[key] = 0;
+    }
+
+    partidas.forEach(p => {
+      const shortDate = (p['Fecha'] || '').slice(0, 5);
+      if (last30.hasOwnProperty(shortDate)) last30[shortDate]++;
+    });
+
+    const labels = Object.keys(last30);
+    const data   = Object.values(last30);
+
+    if (charts.dias) charts.dias.destroy();
+    charts.dias = new Chart(document.getElementById('chartDias'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Partidas',
+          data,
+          borderColor: '#22c55e',
+          backgroundColor: 'rgba(34,197,94,0.1)',
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#22c55e',
+          pointBorderColor: 'rgba(0,0,0,0.4)',
+          pointRadius: 4,
+          pointHoverRadius: 7,
+          borderWidth: 2.5,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(10,22,8,0.9)',
+            borderColor: 'rgba(34,197,94,0.4)',
+            borderWidth: 1,
+            titleColor: '#4ade80',
+            bodyColor: 'rgba(255,255,255,0.8)',
+            padding: 12,
+            cornerRadius: 10,
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(255,255,255,0.04)' },
+            ticks: {
+              font: { family: 'Nunito', size: 10, weight: '700' },
+              color: 'rgba(255,255,255,0.3)',
+              maxTicksLimit: 10,
+            }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1,
+              font: { family: 'Nunito', size: 10, weight: '700' },
+              color: 'rgba(255,255,255,0.3)',
+            },
+            grid: { color: 'rgba(255,255,255,0.06)' }
+          }
+        }
+      }
+    });
+  }
+
+  // ─── Chart: Distribución de Puntajes ───
+  function renderChartPuntajes(partidas) {
+    const counts = [0,0,0,0,0,0];
+    partidas.forEach(p => {
+      const s = parseInt(p['Puntaje'] || 0, 10);
+      if (s >= 0 && s <= 5) counts[s]++;
+    });
+
+    const barColors = [
+      'rgba(239,68,68,0.7)',
+      'rgba(239,68,68,0.5)',
+      'rgba(234,179,8,0.6)',
+      'rgba(34,197,94,0.4)',
+      'rgba(34,197,94,0.6)',
+      'rgba(245,158,11,0.8)',
+    ];
+
+    if (charts.puntajes) charts.puntajes.destroy();
+    charts.puntajes = new Chart(document.getElementById('chartPuntajes'), {
+      type: 'bar',
+      data: {
+        labels: ['0 pts','1 pts','2 pts','3 pts','4 pts','5 pts'],
+        datasets: [{
+          label: 'Partidas',
+          data: counts,
+          backgroundColor: barColors,
+          borderRadius: 8,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(10,22,8,0.9)',
+            borderColor: 'rgba(34,197,94,0.4)',
+            borderWidth: 1,
+            titleColor: '#4ade80',
+            bodyColor: 'rgba(255,255,255,0.8)',
+            padding: 12,
+            cornerRadius: 10,
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { font: { family: 'Nunito', size: 11, weight: '700' }, color: 'rgba(255,255,255,0.4)' }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1, font: { family: 'Nunito', size: 10, weight: '700' }, color: 'rgba(255,255,255,0.3)' },
+            grid: { color: 'rgba(255,255,255,0.06)' }
+          }
+        }
+      }
+    });
+  }
+
+  // ─── Chart: Actividad por Hora ───
+  function renderChartHoras(partidas) {
+    const counts = new Array(24).fill(0);
+    partidas.forEach(p => {
+      const hora = (p['Hora'] || '').split(':')[0];
+      const h = parseInt(hora, 10);
+      if (!isNaN(h) && h >= 0 && h < 24) counts[h]++;
+    });
+
+    const colors = counts.map(v => v > 0 ? 'rgba(34,197,94,0.6)' : 'rgba(255,255,255,0.05)');
+    const labels = Array.from({length: 24}, (_, i) => `${String(i).padStart(2,'0')}h`);
+
+    if (charts.horas) charts.horas.destroy();
+    charts.horas = new Chart(document.getElementById('chartHoras'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Partidas',
+          data: counts,
+          backgroundColor: colors,
+          borderRadius: 4,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(10,22,8,0.9)',
+            borderColor: 'rgba(34,197,94,0.4)',
+            borderWidth: 1,
+            titleColor: '#4ade80',
+            bodyColor: 'rgba(255,255,255,0.8)',
+            padding: 12,
+            cornerRadius: 10,
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { font: { family: 'Nunito', size: 10, weight: '700' }, color: 'rgba(255,255,255,0.35)' }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1, font: { family: 'Nunito', size: 10, weight: '700' }, color: 'rgba(255,255,255,0.3)' },
+            grid: { color: 'rgba(255,255,255,0.06)' }
+          }
+        }
+      }
+    });
+  }
+
+  // ─── Ranking de Preguntas ───
+  function renderRanking(preguntas) {
+    const map = {};
+    preguntas.forEach(p => {
+      const q = (p['Pregunta'] || '').trim();
+      if (!q) return;
+      if (!map[q]) map[q] = { total: 0, correctas: 0 };
+      map[q].total++;
+      if ((p['Respondida Correctamente'] || '').toUpperCase() === 'SI') map[q].correctas++;
+    });
+
+    const list = Object.entries(map).map(([q, v]) => ({
+      pregunta: q,
+      total: v.total,
+      correctas: v.correctas,
+      incorrectas: v.total - v.correctas,
+      pct: v.total > 0 ? Math.round((v.correctas / v.total) * 100) : 0
+    })).sort((a, b) => b.pct - a.pct);
+
+    const container = document.getElementById('rankingList');
+
+    if (list.length === 0) {
+      container.innerHTML = `<div class="empty-state"><div class="empty-icon">📊</div>Sin datos de preguntas.</div>`;
+      return;
+    }
+
+    container.innerHTML = list.map((item, i) => {
+      const rank = i + 1;
+      const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-n';
+      const rankLabel = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+      const pctClass = item.pct >= 70 ? 'pct-green' : item.pct >= 40 ? 'pct-yellow' : 'pct-red';
+      const fillColor = item.pct >= 70 ? '#22c55e' : item.pct >= 40 ? '#eab308' : '#ef4444';
+      return `
+        <div class="rank-item">
+          <div class="rank-badge ${rankClass}">${rankLabel}</div>
+          <div class="rank-question">${escapeHtml(item.pregunta)}</div>
+          <div class="rank-bar-wrap">
+            <div class="rank-bar-fill" data-pct="${item.pct}" style="background:${fillColor};width:0%"></div>
+          </div>
+          <div class="rank-pct ${pctClass}">${item.pct}%</div>
+          <div class="rank-count">${item.correctas}/${item.total} aciertos</div>
+        </div>`;
+    }).join('');
+
+    // Animate bars after render
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.rank-bar-fill').forEach(el => {
+        const pct = parseFloat(el.dataset.pct) || 0;
+        el.style.width = pct + '%';
+      });
+    });
+  }
+
+  // ─── Historial ───
+  function renderHistorial(partidas) {
+    const tbody = document.getElementById('histBody');
+    if (partidas.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon" style="text-align:center;">📭</div><div style="text-align:center;">Sin datos aún.</div></div></td></tr>`;
+      return;
+    }
+
+    const reversed = [...partidas].reverse();
+    tbody.innerHTML = reversed.map((p, i) => {
+      const score = parseInt(p['Puntaje'] || 0, 10);
+      const pct   = parseFloat(p['Porcentaje %'] || 0);
+      const dur   = parseInt(p['Duración (seg)'] || 0, 10);
+      const tabletRaw = (p['Tablet ID'] || '');
+      const tabletShort = tabletRaw.replace(/^tablet_/i, '').slice(0, 6) || tabletRaw.slice(0, 6);
+      const pctClass = pct >= 70 ? 'pct-cell-green' : pct >= 40 ? 'pct-cell-yellow' : 'pct-cell-red';
+
+      return `<tr>
+        <td class="row-num">${i + 1}</td>
+        <td>${escapeHtml(p['Fecha'] || '—')}</td>
+        <td>${escapeHtml(p['Hora'] || '—')}</td>
+        <td><code>${escapeHtml(tabletShort || '—')}</code></td>
+        <td><span class="score-badge score-${score}">${score}/5</span></td>
+        <td class="${pctClass}">${Math.round(pct)}%</td>
+        <td>${dur > 0 ? formatDur(dur) : '—'}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ─── Helpers ───
+  function formatDur(seg) {
+    if (seg < 60) return `${seg}s`;
+    const m = Math.floor(seg / 60), s = seg % 60;
+    return `${m}m ${s}s`;
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // ─── Excel Export ───
+  function exportExcel() {
+    if (!allData) return;
+    const { partidas, preguntas } = allData;
+
+    const wb = XLSX.utils.book_new();
+
+    // Sheet 1: Partidas
+    const ws1 = XLSX.utils.json_to_sheet(partidas);
+    XLSX.utils.book_append_sheet(wb, ws1, 'Partidas');
+
+    // Sheet 2: Detalle Preguntas
+    const ws2 = XLSX.utils.json_to_sheet(preguntas);
+    XLSX.utils.book_append_sheet(wb, ws2, 'Detalle Preguntas');
+
+    // Sheet 3: Ranking Preguntas
+    const map = {};
+    preguntas.forEach(p => {
+      const q = (p['Pregunta'] || '').trim();
+      if (!q) return;
+      if (!map[q]) map[q] = { total: 0, correctas: 0 };
+      map[q].total++;
+      if ((p['Respondida Correctamente'] || '').toUpperCase() === 'SI') map[q].correctas++;
+    });
+
+    const rankData = Object.entries(map).map(([q, v]) => ({
+      'Pregunta': q,
+      'Veces mostrada': v.total,
+      'Respuestas correctas': v.correctas,
+      'Respuestas incorrectas': v.total - v.correctas,
+      '% Acierto': v.total > 0 ? Math.round((v.correctas / v.total) * 100) : 0,
+    })).sort((a, b) => b['% Acierto'] - a['% Acierto']);
+
+    const ws3 = XLSX.utils.json_to_sheet(rankData);
+    XLSX.utils.book_append_sheet(wb, ws3, 'Ranking Preguntas');
+
+    const today = new Date();
+    const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    XLSX.writeFile(wb, `trivia_valleviejo_${dateStr}.xlsx`);
+  }
+</script>
+</body>
+</html>

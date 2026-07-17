@@ -544,6 +544,54 @@ let questions=buildRound();
 let current=0,score=0,answered=false;
 const colors=['#22c55e','#f59e0b','#3b82f6','#ec4899','#a855f7','#f97316','#06b6d4'];
 
+// ── Estadísticas (sin-conexión → sync automático) ─────────────────
+// Pegá la URL del Apps Script aquí después de configurarlo (ver SETUP_INSTRUCCIONES.md)
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyKL5ZM6jBrB_gFwflZJaXfDu9G6ogPT-fHRO_F3xXwfxe9ulFLWzOjL-z-GAgXuwUd/exec';
+
+function getTabletId(){
+  let id=localStorage.getItem('trivia_tablet_id');
+  if(!id){ id='tablet_'+Math.random().toString(36).substr(2,9); localStorage.setItem('trivia_tablet_id',id); }
+  return id;
+}
+
+let gameStats={startTime:null,results:[]};
+
+async function syncStats(){
+  if(!WEBHOOK_URL||!navigator.onLine)return;
+  const pending=JSON.parse(localStorage.getItem('trivia_pending_stats')||'[]');
+  if(!pending.length)return;
+  for(const stat of [...pending]){
+    try{
+      await fetch(WEBHOOK_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(stat)});
+      const queue=JSON.parse(localStorage.getItem('trivia_pending_stats')||'[]');
+      localStorage.setItem('trivia_pending_stats',JSON.stringify(queue.filter(s=>s.timestamp!==stat.timestamp)));
+    }catch(e){break;}
+  }
+}
+
+function saveGameStats(sc,tot,stats){
+  if(!WEBHOOK_URL)return;
+  const now=new Date();
+  const pad=n=>String(n).padStart(2,'0');
+  const stat={
+    timestamp:now.toISOString(),
+    date:`${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}`,
+    time:`${pad(now.getHours())}:${pad(now.getMinutes())}`,
+    tablet_id:getTabletId(),
+    score:sc,
+    total:tot,
+    duration_seconds:stats.startTime?Math.round((now-stats.startTime)/1000):0,
+    questions:stats.results
+  };
+  const queue=JSON.parse(localStorage.getItem('trivia_pending_stats')||'[]');
+  queue.push(stat);
+  localStorage.setItem('trivia_pending_stats',JSON.stringify(queue));
+  syncStats();
+}
+
+window.addEventListener('online',syncStats);
+syncStats(); // intento al cargar la página
+
 function launchConfetti(){
   const c=document.getElementById('confetti');
   c.innerHTML='';
@@ -573,6 +621,8 @@ function launchMiniConfetti(){
 function render(){
   sndQuestion();
   answered=false;
+  // Resetear stats al inicio de cada partida nueva
+  if(current===0) gameStats={startTime:new Date(),results:[]};
   const q=questions[current];
   document.getElementById('progressLabel').textContent=`Pregunta ${current+1} de ${questions.length}`;
   document.getElementById('progressFill').style.width=`${((current+1)/questions.length)*100}%`;
@@ -612,12 +662,15 @@ function selectOption(idx,btn){
   if(answered)return;
   answered=true;
   const q=questions[current];
+  // Registrar resultado para estadísticas
+  const isCorrect=idx===q.correct;
+  gameStats.results.push({text:q.q,correct:isCorrect});
   const allBtns=document.querySelectorAll('.option-btn');
   allBtns.forEach(b=>b.disabled=true);
   const speechBubble=document.getElementById('speechBubble');
 
   let prefix='';
-  if(idx===q.correct){
+  if(isCorrect){
     btn.classList.add('correct');
     score++;
     prefix='<strong style="color:#16a34a;display:block;margin-bottom:4px;font-size:16px;">¡Correcto! 🎉</strong>';
@@ -665,6 +718,8 @@ function showScore(){
   document.getElementById('scoreEmoji').textContent=emoji;
   document.getElementById('scoreComment').textContent=comment;
   if(pct>=0.6)launchConfetti();
+  // Guardar y sincronizar estadísticas
+  saveGameStats(score,questions.length,gameStats);
 }
 
 function restart(){
