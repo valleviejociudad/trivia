@@ -4,6 +4,12 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Trivia Valle Viejo</title>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#1a2e10">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Trivia VV">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -733,6 +739,16 @@ function restart(){
 }
 
 render();
+</script>
+
+<script>
+  // Registro del Service Worker (PWA)
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js', { scope: './' })
+        .catch(err => console.warn('SW:', err));
+    });
+  }
 </script>
 </body>
 </html>
