@@ -4,7 +4,7 @@
   "description": "Trivia interactiva sobre historia y cultura de Valle Viejo, Catamarca",
   "start_url": "./index.html",
   "scope": "./",
-  "display": "standalone",
+  "display": "fullscreen",
   "orientation": "portrait",
   "theme_color": "#1a2e10",
   "background_color": "#1a2e10",

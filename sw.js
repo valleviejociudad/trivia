@@ -1,6 +1,6 @@
 // Trivia Valle Viejo — Service Worker
 // Cambiá el número de versión cada vez que actualices los archivos
-const CACHE_NAME = 'trivia-vv-v1';
+const CACHE_NAME = 'trivia-vv-v2';
 
 const ASSETS = [
   './',
