@@ -227,112 +227,222 @@ html,body{min-height:100dvh;background:#1a2e10;margin:0;padding:0;overflow-x:hid
 .confetti-piece{position:absolute;width:10px;height:10px;top:-20px;animation:confettiFall linear forwards;}
 @keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(750px) rotate(720deg);opacity:0;}}
 
-@media (min-width: 600px) {
+@media (min-width: 600px) and (max-width: 767px) {
   .content {
-    max-width: 820px;
-    padding: 30px 24px 24px;
-    gap: 16px;
-  }
-  .titulo-img {
-    max-width: 380px;
-  }
-  .trivia-logo-img {
-    max-width: 480px;
-    margin: -48px 0 12px 0;
-  }
-  .progress-row {
+    max-width: 580px;
+    padding: 20px 20px 20px;
     gap: 12px;
   }
+  .titulo-img {
+    max-width: 200px;
+  }
+  .trivia-logo-img {
+    max-width: 300px;
+    margin: -24px 0 6px 0;
+  }
+  .progress-row {
+    gap: 10px;
+  }
   .progress-label {
-    font-size: 20px;
-    padding: 10px 24px;
+    font-size: 15px;
+    padding: 7px 16px;
   }
   .progress-track {
-    height: 18px;
+    height: 12px;
   }
   .question-card {
-    padding: 40px 36px 30px;
-    border-radius: 36px;
-  }
-  .question-text {
-    font-size: 32px;
-  }
-  .options {
-    gap: 16px;
-  }
-  .option-btn {
-    padding: 22px 30px;
+    padding: 26px 22px 20px;
     border-radius: 26px;
   }
+  .question-text {
+    font-size: 22px;
+  }
+  .options {
+    gap: 10px;
+  }
+  .option-btn {
+    padding: 15px 20px;
+    border-radius: 20px;
+  }
   .option-letter {
-    width: 56px;
-    height: 56px;
-    font-size: 26px;
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
   }
   .option-text {
-    font-size: 26px;
+    font-size: 20px;
   }
   .nav-row {
-    gap: 16px;
-    margin-top: 12px;
+    gap: 10px;
+    margin-top: 8px;
   }
   .nav-btn {
-    padding: 22px 30px;
-    font-size: 24px;
+    padding: 16px 22px;
+    font-size: 18px;
   }
   .nav-next {
-    font-size: 25px;
+    font-size: 19px;
   }
   .condor-container {
-    bottom: 110px;
-    left: 24px;
-    right: 24px;
-    gap: 20px;
+    bottom: 90px;
+    left: 16px;
+    right: 16px;
+    gap: 14px;
   }
   .condor-avatar {
-    width: 210px;
-    height: 210px;
-    margin-bottom: -12px;
+    width: 140px;
+    height: 140px;
+    margin-bottom: -10px;
   }
   .speech-bubble {
-    font-size: 24px;
-    padding: 26px 32px;
-    border-radius: 36px;
-    border-width: 5px;
+    font-size: 17px;
+    padding: 18px 22px;
+    border-radius: 26px;
+    border-width: 4px;
   }
   .speech-bubble::before {
-    border-width: 22px 22px 22px 0;
-    left: -26px;
-    bottom: 36px;
+    border-width: 14px 14px 14px 0;
+    left: -16px;
+    bottom: 26px;
   }
   .speech-bubble::after {
-    border-width: 17px 17px 17px 0;
-    left: -17px;
-    bottom: 41px;
+    border-width: 11px 11px 11px 0;
+    left: -11px;
+    bottom: 30px;
   }
   .score-screen {
-    padding: 50px 40px;
-    border-radius: 36px;
-    gap: 24px;
+    padding: 36px 28px;
+    border-radius: 28px;
+    gap: 14px;
   }
   .score-emoji {
-    font-size: 96px;
+    font-size: 68px;
   }
   .score-title {
-    font-size: 42px;
+    font-size: 30px;
   }
   .score-sub {
-    font-size: 28px;
+    font-size: 20px;
   }
   .score-num {
-    font-size: 80px;
+    font-size: 60px;
   }
   .score-comment {
-    font-size: 26px;
+    font-size: 18px;
   }
   .restart-btn {
-    padding: 22px 64px;
-    font-size: 28px;
+    padding: 16px 48px;
+    font-size: 20px;
+  }
+}
+
+/* ── Tablet portrait 768px-1024px (ej. 1200x2000) ── */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .content {
+    max-width: 700px;
+    padding: 24px 28px 24px;
+    gap: 14px;
+  }
+  .titulo-img {
+    max-width: 200px;
+  }
+  .trivia-logo-img {
+    max-width: 310px;
+    margin: -28px 0 8px 0;
+  }
+  .progress-row {
+    gap: 10px;
+  }
+  .progress-label {
+    font-size: 16px;
+    padding: 8px 18px;
+  }
+  .progress-track {
+    height: 13px;
+  }
+  .question-card {
+    padding: 28px 28px 22px;
+    border-radius: 28px;
+  }
+  .question-text {
+    font-size: 24px;
+  }
+  .options {
+    gap: 12px;
+  }
+  .option-btn {
+    padding: 16px 24px;
+    border-radius: 22px;
+  }
+  .option-letter {
+    width: 46px;
+    height: 46px;
+    font-size: 21px;
+  }
+  .option-text {
+    font-size: 21px;
+  }
+  .nav-row {
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .nav-btn {
+    padding: 17px 24px;
+    font-size: 19px;
+  }
+  .nav-next {
+    font-size: 20px;
+  }
+  .condor-container {
+    bottom: 96px;
+    left: 20px;
+    right: 20px;
+    gap: 16px;
+  }
+  .condor-avatar {
+    width: 150px;
+    height: 150px;
+    margin-bottom: -10px;
+  }
+  .speech-bubble {
+    font-size: 18px;
+    padding: 20px 24px;
+    border-radius: 28px;
+    border-width: 4px;
+  }
+  .speech-bubble::before {
+    border-width: 16px 16px 16px 0;
+    left: -18px;
+    bottom: 28px;
+  }
+  .speech-bubble::after {
+    border-width: 12px 12px 12px 0;
+    left: -12px;
+    bottom: 32px;
+  }
+  .score-screen {
+    padding: 40px 32px;
+    border-radius: 30px;
+    gap: 16px;
+  }
+  .score-emoji {
+    font-size: 72px;
+  }
+  .score-title {
+    font-size: 32px;
+  }
+  .score-sub {
+    font-size: 20px;
+  }
+  .score-num {
+    font-size: 64px;
+  }
+  .score-comment {
+    font-size: 19px;
+  }
+  .restart-btn {
+    padding: 17px 52px;
+    font-size: 21px;
   }
 }
 </style>
